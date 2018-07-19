@@ -10,14 +10,14 @@
       <port>143</port>
       <socketType>STARTTLS</socketType>
       <authentication>password-cleartext</authentication>
-      <username>%EMAILADDRESS%</username>
+      <username>{email}</username>
     </incomingServer>
     <outgoingServer type="smtp">
       <hostname>{mail_hostname}</hostname>
       <port>587</port>
       <socketType>STARTTLS</socketType>
       <authentication>password-cleartext</authentication>
-      <username>%EMAILADDRESS%</username>
+      <username>{email}</username>
     </outgoingServer>
   </emailProvider>
 </clientConfig>

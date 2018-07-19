@@ -1,7 +1,10 @@
 #!/usr/bin/python3
+
+# Example URL http://autoconfig.example.com/mail/config-v1.1.xml?emailaddress=fred@example.com
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import time
+from urllib.parse import urlparse
 
 
 hostName = ""
@@ -17,13 +20,18 @@ class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         if self.path.startswith('/mail/config-v1.1.xml'):
+            parsed = urlparse(self.path)
+            tuple = parsed.query.split('=')
+            if tuple[0] == 'emailaddress':
+                email = tuple[1]
             path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'autoconfig.xml')
             with open(path) as f:
                 template = f.read()
             self.send_header('Content-type', 'text/xml')
             self.end_headers()
             context = {
-                'hostname':             self.headers['Host'].replace('autoconfig.', ''),
+                'email' :               email,
+                'hostname':             os.environ.get('HOSTNAME', ''),
                 'display_name':         os.environ.get('DISPLAY_NAME', ''),
                 'display_short_name':   os.environ.get('DISPLAY_SHORT_NAME', ''),
                 'mail_hostname':        os.environ.get('MAIL_HOSTNAME', ''),
